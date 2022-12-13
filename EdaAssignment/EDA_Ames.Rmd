@@ -1,0 +1,84 @@
+---
+title: "EDA_Ames"
+output:
+  html_document: default
+  pdf_document: default
+date: "2022-12-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r data}
+data <- read.csv("data/ames.csv", stringsAsFactors=FALSE, row.names=1)
+```
+
+```{r histSalesPrice}
+hist(
+  data$SalePrice,
+  xlab = "Sale Price",
+  ylab = "Number of Houses",
+  main = "Distribution of Sale Prices",
+  col = "Pink"
+)
+
+print_stats <- function(data, column) {
+  print(paste("Mean ", mean(data[[column]])))
+  print(paste("Median: ", median(data[[column]])))
+  print(paste("Standard Deviation: ", sd(data[[column]])))
+}
+print_stats(data, "SalePrice")
+```
+
+```{r Total Rooms Above Grade}
+hist(
+  data$TotRmsAbvGrd,
+  xlab = "Total Rooms (Does Not Include Bathrooms)",
+  ylab = "Number of Houses",
+  main = "Distribution of Total Rooms Above Grade",
+  col = "Dark Green"
+)
+
+print_stats(data, "TotRmsAbvGrd")
+```
+
+```{r Overall Condition}
+hist(
+  data$OverallCond,
+  main = "Distribution of Overall Condition of Houses on a 1-10 Scale",
+  xlab = "Condition of House",
+  ylab = "Number of Houses",
+  col = "Blue"
+)
+
+print_stats(data, "OverallCond")
+```
+
+```{r Condition Comparisons}
+below_avg_condition <- subset(data, data$OverallCond < 5)
+avg_condition <- subset(data, data$OverallCond == 5)
+above_avg_condition <- subset(data, data$OverallCond > 5)
+
+par(mfrow=c(1,3), mar=c(5, 4, 4, 1))
+bins = pretty(range(data$SalePrice), n=20)
+
+hist(
+  x=above_avg_condition$SalePrice,
+  breaks=bins,
+  col="cyan",
+  main="Above Avg Condition"
+)
+hist(
+  x=avg_condition$SalePrice,
+  breaks=bins,
+  col="gray",
+  main="Average Condition"
+)
+hist(
+  x=below_avg_condition$SalePrice,
+  breaks=bins,
+  col="yellow",
+  main="Below Average Condition"
+)
+```
